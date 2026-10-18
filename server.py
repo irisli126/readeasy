@@ -83,19 +83,45 @@ def save_vocab_file():
         pass
 
 def translate_single_text(text):
-    if not text.strip():
+    text = text.strip()
+    if not text:
         return ""
+    if len(text) <= 2:
+        return text
+
+    # 1. Try Google Chrome Extension translation endpoint
+    for client in ['dict-chrome-ex', 'gtx']:
+        try:
+            url = f"https://clients5.google.com/translate_a/t?client={client}&sl=sv&tl=zh-CN&q=" + urllib.parse.quote(text)
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
+            with urllib.request.urlopen(req, timeout=4) as resp:
+                res = json.loads(resp.read().decode('utf-8'))
+                if isinstance(res, list) and len(res) > 0:
+                    translated = res[0]
+                    # Verify it contains Chinese characters
+                    if bool(re.search(r'[\u4e00-\u9fff]', translated)):
+                        return translated
+        except Exception:
+            pass
+
+    # 2. Try MyMemory fallback ONLY if it returns valid Chinese
     try:
         url = f'https://api.mymemory.translated.net/get?q={urllib.parse.quote(text)}&langpair=sv|zh-CN'
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=5) as resp:
+        with urllib.request.urlopen(req, timeout=4) as resp:
             data = json.loads(resp.read().decode('utf-8'))
             tr = data.get('responseData', {}).get('translatedText', '')
-            if tr and 'MYMEMORY WARNING' not in tr and 'QUERY LENGTH' not in tr:
+            if tr and bool(re.search(r'[\u4e00-\u9fff]', tr)) and 'MYMEMORY' not in tr:
                 return tr
     except Exception:
         pass
-    return text
+
+    # NEVER return Swedish or unknown languages!
+    if text.isdigit():
+        return text
+    if text.isupper() and len(text) < 25:
+        return text
+    return "（正在翻译中...）"
 
 def prefetch_page_translation(page_num):
     p_str = str(page_num)
@@ -199,18 +225,31 @@ def api_get_page():
     translations = trans_cache.get(p_str, [])
     paras = page_data.get('paragraphs', [])
 
-    # If in bilingual mode and translations are missing, translate on the fly
-    if mode == 'bilingual' and (not translations or len(translations) < len(paras)):
-        translated_list = []
-        for p in paras:
-            if len(p) <= 2:
-                translated_list.append(p)
-            else:
-                translated_list.append(translate_single_text(p))
-                time.sleep(0.05)
-        translations = translated_list
-        trans_cache[p_str] = translations
-        save_translations_cache()
+    # If in bilingual mode, ensure translations exist AND are valid Chinese
+    if mode == 'bilingual':
+        needs_translation = False
+        if not translations or len(translations) < len(paras):
+            needs_translation = True
+        else:
+            # Check if any cached paragraph lacks Chinese characters (corrupted / failed previous cache)
+            for zh_para in translations:
+                if len(zh_para) > 4 and not re.search(r'[\u4e00-\u9fff]', zh_para):
+                    needs_translation = True
+                    break
+
+        if needs_translation:
+            translated_list = []
+            for p in paras:
+                if len(p) <= 2 or p.isdigit():
+                    translated_list.append(p)
+                elif p.isupper() and len(p) < 25:
+                    translated_list.append(p)
+                else:
+                    translated_list.append(translate_single_text(p))
+                    time.sleep(0.04)
+            translations = translated_list
+            trans_cache[p_str] = translations
+            save_translations_cache()
 
     # Trigger background prefetch for next page
     if page_num < len(book_pages):
