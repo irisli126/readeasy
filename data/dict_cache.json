@@ -58,5 +58,35 @@
     "audioUrl": "",
     "zh": "马库斯认为儿子",
     "en": ""
+  },
+  "toviga": {
+    "query": "toviga",
+    "word": "toviga",
+    "lemma": "",
+    "pos": "adj",
+    "phonetic": "",
+    "audioUrl": "",
+    "zh": "adj. 缠结的，蓬乱的（复数/定指）",
+    "en": ""
+  },
+  "jeansen": {
+    "query": "jeansen",
+    "word": "jeansen",
+    "lemma": "jeans",
+    "pos": "n",
+    "phonetic": "ji:ns",
+    "audioUrl": "http://lexin.nada.kth.se/sound/jeans.mp3",
+    "zh": "n. 牛仔裤",
+    "en": "jeans"
+  },
+  "gymnastikskorna": {
+    "query": "gymnastikskorna",
+    "word": "gymnastikskorna",
+    "lemma": "gymnastikskor",
+    "pos": "animals",
+    "phonetic": "",
+    "audioUrl": "",
+    "zh": "n. 训练员；运动鞋；练习器（trainer的复数）",
+    "en": "trainers"
   }
 }
