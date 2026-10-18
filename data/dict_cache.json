@@ -1,0 +1,62 @@
+{
+  "svarade": {
+    "query": "svarade",
+    "word": "svarade",
+    "lemma": "",
+    "pos": "verb",
+    "phonetic": "",
+    "audioUrl": "",
+    "zh": "回答（过去式）",
+    "en": ""
+  },
+  "stolen": {
+    "query": "stolen",
+    "word": "stolen",
+    "lemma": "",
+    "pos": "subst",
+    "phonetic": "",
+    "audioUrl": "",
+    "zh": "椅子（定指）",
+    "en": ""
+  },
+  "känslor": {
+    "query": "känslor",
+    "word": "känslor",
+    "lemma": "",
+    "pos": "subst",
+    "phonetic": "",
+    "audioUrl": "",
+    "zh": "感情，感觉（复数）",
+    "en": ""
+  },
+  "håret": {
+    "query": "håret",
+    "word": "håret",
+    "lemma": "",
+    "pos": "subst",
+    "phonetic": "",
+    "audioUrl": "",
+    "zh": "头发（定指）",
+    "en": ""
+  },
+  "mindes": {
+    "query": "mindes",
+    "word": "mindes",
+    "lemma": "minnas",
+    "pos": "verb",
+    "phonetic": "min:s",
+    "audioUrl": "http://lexin.nada.kth.se/sound/minns.mp3",
+    "zh": "记得，回忆起（过去式）",
+    "en": "remember"
+  },
+  "marcus betraktade sonen": {
+    "query": "Marcus betraktade sonen",
+    "word": "marcus betraktade sonen",
+    "lemma": "marcus betraktade sonen",
+    "pos": "短语/句子",
+    "phonetic": "",
+    "audioUrl": "",
+    "zh": "马库斯认为儿子",
+    "en": ""
+  }
+}
